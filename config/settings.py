@@ -128,8 +128,7 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 
-# Use SQLite for now
-DATABASES['default'] = dj_database_url.config(default='sqlite:///db.sqlite3')
+
 
 
 # Default primary key field type

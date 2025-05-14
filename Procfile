@@ -1,1 +1,1 @@
-web: gunicorn marketplace.wsgi
+web: gunicorn config.wsgi
