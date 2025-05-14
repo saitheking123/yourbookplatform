@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}My Listings{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">📚 My Book Listings</h2>
+
+{% for book in books %}
+<div class="bg-white p-4 rounded shadow mb-4 flex flex-col md:flex-row gap-4">
+    <img src="{{ book.image.url }}" class="w-32 h-40 object-cover rounded" alt="{{ book.title }}">
+    <div class="flex-1">
+        <h3 class="text-lg font-bold">{{ book.title }}</h3>
+        <p class="text-gray-600">{{ book.author }}</p>
+        <p class="text-sm mt-1">{{ book.description }}</p>
+        <p class="text-sm">Condition: <strong>{{ book.condition }}</strong></p>
+        <p class="text-green-600 font-semibold">₹{{ book.price }}</p>
+        <div class="mt-2 space-x-2">
+            <a href="{% url 'edit_book' book.id %}" class="text-blue-600 hover:underline">✏️ Edit</a>
+            <a href="{% url 'delete_book' book.id %}" class="text-red-600 hover:underline">🗑️ Delete</a>
+        </div>
+    </div>
+</div>
+{% empty %}
+<p>You have not listed any books yet.</p>
+{% endfor %}
+{% endblock %}

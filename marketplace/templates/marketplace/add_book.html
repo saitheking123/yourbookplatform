@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}Add Book{% endblock %}
+
+{% block content %}
+<h2 class="text-2xl font-semibold mb-4">➕ Add a New Book</h2>
+
+<form method="post" enctype="multipart/form-data" class="bg-white p-6 rounded shadow max-w-xl">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="mt-4 bg-blue-600 text-white px-4 py-2 rounded">Add Book</button>
+</form>
+{% endblock %}
