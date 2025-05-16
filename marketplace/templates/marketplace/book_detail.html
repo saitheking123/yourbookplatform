@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-6">
+            {% if book.image %}
+            <img src="{{ book.image.url }}" class="img-fluid rounded" alt="{{ book.title }}">
+            {% endif %}
+        </div>
+        <div class="col-md-6">
+            <h2>{{ book.title }}</h2>
+            <p class="text-muted">By {{ book.author }}</p>
+            <p class="lead">₹{{ book.price }}</p>
+            <p><strong>Condition:</strong> {{ book.get_condition_display }}</p>
+            <p>{{ book.description }}</p>
+            
+            {% if user.is_authenticated and user != book.seller %}
+                <form method="POST" action="{% url 'request_to_buy' book.id %}">
+                    {% csrf_token %}
+                    <div class="form-group mb-3">
+                        <label for="delivery_type">Choose Delivery Method:</label>
+                        <select name="delivery_type" id="delivery_type" class="form-control" required>
+                            <option value="">Select a delivery method</option>
+                            <option value="pickup">Meet at campus (Free)</option>
+                            <option value="volunteer">Free Volunteer Delivery</option>
+                            <option value="studentclub">Student Delivery Club</option>
+                            <option value="courier">Courier (₹60)</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Request to Buy</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

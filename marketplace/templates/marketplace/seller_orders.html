@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Seller Orders{% endblock %}
+{% block content %}
+<h2 class="text-2xl font-bold mb-6">📬 Incoming Requests</h2>
+{% if orders %}
+  <div class="grid gap-6">
+    {% for order in orders %}
+      <div class="bg-white rounded shadow p-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h3 class="text-lg font-semibold">{{ order.book.title }}</h3>
+            <p class="text-gray-600">by {{ order.book.author }}</p>
+            <p class="text-gray-600">Buyer: <span class="font-semibold">{{ order.buyer.username }}</span></p>
+            <p class="text-gray-600">Delivery: {{ order.get_delivery_type_display }}</p>
+            <p class="text-gray-600">Order Date: {{ order.created_at|date:"M d, Y H:i" }}</p>
+          </div>
+          <div>
+            <span class="inline-block px-3 py-1 rounded-full {% if order.status == 'requested' %}bg-yellow-100 text-yellow-800{% elif order.status == 'accepted' %}bg-blue-100 text-blue-800{% elif order.status == 'completed' %}bg-green-100 text-green-800{% elif order.status == 'cancelled' %}bg-red-100 text-red-800{% endif %}">
+              {{ order.get_status_display }}
+            </span>
+            {% if order.status == 'requested' %}
+              <form method="post" action="{% url 'accept_order' order.id %}" class="mt-2">
+                {% csrf_token %}
+                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Accept</button>
+              </form>
+            {% elif order.status == 'accepted' %}
+              <p class="text-blue-700 mt-2">Accepted</p>
+            {% elif order.status == 'completed' %}
+              <p class="text-green-700 mt-2">Completed</p>
+            {% elif order.status == 'cancelled' %}
+              <p class="text-red-700 mt-2">Cancelled</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p class="text-gray-600">No incoming requests yet.</p>
+{% endif %}
+{% endblock %}

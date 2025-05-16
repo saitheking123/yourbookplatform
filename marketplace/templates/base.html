@@ -6,17 +6,23 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
-    <nav class="bg-white shadow p-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold"><a href="/">📚 BookSwap</a></h1>
-        <div>
-            {% if user.is_authenticated %}
-                <span class="mr-4">👋 {{ user.username }}</span>
-                <a class="text-blue-600 mr-4" href="{% url 'my_books' %}">My Listings</a>
-                <a class="text-green-600 mr-4" href="{% url 'add_book' %}">Add Book</a>
-                <form method="post" action="/accounts/logout/" class="inline">
-                    {% csrf_token %}
-                    <button type="submit" class="text-red-600 hover:underline">Logout</button>
-                </form>
+    <nav class="bg-white shadow p-4">
+        <div class="container mx-auto flex flex-wrap justify-between items-center">
+            <h1 class="text-xl font-bold"><a href="/" class="flex items-center">📚 BookSwap</a></h1>
+            <div class="flex items-center space-x-4">
+                <a href="{% url 'book_list' %}" class="text-gray-700 hover:text-blue-600">📚 Browse Books</a>
+                <a href="{% url 'submit_feedback' %}" class="text-yellow-600 hover:text-yellow-800">💬 Feedback</a>
+                {% if user.is_authenticated %}
+                    <div class="flex items-center space-x-4">
+                        <span class="text-gray-600">👋 {{ user.username }}</span>
+                        <a class="text-blue-600" href="{% url 'my_books' %}">📖 My Listings</a>
+                        <a class="text-green-600" href="{% url 'add_book' %}">➕ Add Book</a>
+                        <a href="{% url 'seller_orders' %}" class="text-purple-600 hover:text-purple-800">📬 Seller Requests</a>
+                        <a href="{% url 'about' %}" class="text-gray-700 hover:text-blue-600">👤 About</a>
+                        <form method="post" action="/accounts/logout/" class="inline">
+                            {% csrf_token %}
+                            <button type="submit" class="text-red-600 hover:underline">🚪 Logout</button>
+                        </form>
 
             {% else %}
                 <a class="text-blue-600 mr-4" href="/accounts/login/">Login</a>

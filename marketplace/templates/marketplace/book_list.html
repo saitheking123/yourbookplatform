@@ -2,55 +2,65 @@
 
 {% block title %}All Books{% endblock %}
 {% block content %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title class="text-2xl font-semibold mb-4">Student Book Market</title>
-</head>
-<body>
-   {% if user.is_authenticated %}
-        <p>Welcome, {{ user.username }} | <a href="{% url 'add_book' %}">Add Book</a> | <form method="post" action="/accounts/logout/" class="inline">
-    {% csrf_token %}
-    <button type="submit" class="text-red-600 hover:underline">Logout</button>
-</form>
-</p>
-   {% else %}
-        <p><a href="/accounts/login/">Login</a> | <a href="{% url 'signup' %}">Signup</a></p>
-   {% endif %}
-   <form method="get" class="mb-6 flex flex-wrap gap-2 items-center">
-    🔍 <input type="text" name="q" placeholder="Search books..." value="{{ query }}" class="px-3 py-2 border rounded w-60">
-    📝 Condition:
-    <select name="condition" class="px-3 py-2 border rounded">
-        <option value="all">All</option>
-        <option value="New" {% if condition == 'New' %}selected{% endif %}>New</option>
-        <option value="Good" {% if condition == 'Good' %}selected{% endif %}>Good</option>
-        <option value="Used" {% if condition == 'Used' %}selected{% endif %}>Used</option>
-    </select>
-    <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Search</button>
-   </form>
-   <hr>
+<div class="container mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold mb-6">📚 Available Books</h2>
 
-   {% if user.is_authenticated %}
-        <a href="{% url 'my_books' %}">📚 My Listings</a>
-   {% endif %}
-    <h1>Available Books</h1>
-    <a href="{% url 'add_book' %}">Add Your Book</a>
-    <hr>
+    <form method="get" class="mb-6 flex flex-wrap gap-2 items-center">
+        🔍 <input type="text" name="q" placeholder="Search books..." value="{{ query }}" class="px-3 py-2 border rounded w-60 bg-white text-gray-900 dark:bg-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        📝 Condition:
+        <select name="condition" class="px-3 py-2 border rounded">
+            <option value="all">All</option>
+            <option value="New" {% if condition == 'New' %}selected{% endif %}>New</option>
+            <option value="Good" {% if condition == 'Good' %}selected{% endif %}>Good</option>
+            <option value="Used" {% if condition == 'Used' %}selected{% endif %}>Used</option>
+        </select>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+    </form>
+
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    {% for book in books %}
-    <div class="bg-white p-4 rounded shadow">
-        <img src="{{ book.image.url }}" alt="{{ book.title }}" class="h-40 w-full object-cover rounded mb-2">
-        <h3 class="font-bold text-lg">{{ book.title }}</h3>
-        <p class="text-sm text-gray-500">{{ book.author }}</p>
-        <p class="my-2 text-sm">{{ book.description|truncatewords:20 }}</p>
-        <p class="text-sm">Condition: <strong>{{ book.condition }}</strong></p>
-        <p class="text-sm text-green-600 font-semibold">₹{{ book.price }}</p>
+        {% for book in books %}
+        <div class="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow">
+            {% if book.image %}
+            <div class="relative h-48 mb-4 overflow-hidden rounded-lg">
+                <img src="{{ book.image.url }}" alt="{{ book.title }}" class="w-full h-full object-cover">
+            </div>
+            {% else %}
+            <div class="h-48 mb-4 bg-gray-200 rounded-lg flex items-center justify-center">
+                <span class="text-gray-400 text-4xl">📚</span>
+            </div>
+            {% endif %}
+            <h3 class="font-bold text-xl mb-2">{{ book.title }}</h3>
+            <p class="text-gray-600 mb-2">by {{ book.author }}</p>
+            <p class="text-sm text-gray-500 mb-3">{{ book.description|truncatewords:20 }}</p>
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-sm font-medium">Condition: <span class="text-blue-600">{{ book.condition }}</span></span>
+                <span class="text-lg font-bold text-green-600">₹{{ book.price }}</span>
+            </div>
+            {% if user.is_authenticated and user != book.user %}
+            <form method="post" action="{% url 'request_to_buy' book.id %}" class="mt-4">
+                {% csrf_token %}
+                <button type="submit" class="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center">
+                    <span class="mr-2">🛍️</span> Buy Now
+                </button>
+            </form>
+            {% elif user == book.user %}
+            <div class="mt-4 text-center py-2 px-4 bg-gray-100 rounded-lg text-gray-600">
+                Your Listing
+            </div>
+            {% else %}
+            <a href="{% url 'login' %}" class="block w-full text-center bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+                Login to Buy
+            </a>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="col-span-3 text-center py-8">
+            <p class="text-gray-600 text-lg">No books found.</p>
+            {% if user.is_authenticated %}
+            <a href="{% url 'add_book' %}" class="mt-4 inline-block text-blue-600 hover:underline">Add Your Book</a>
+            {% endif %}
+        </div>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No books found.</p>
-    {% endfor %}
 </div>
 {% endblock %}
-
-</body>
-</html>
