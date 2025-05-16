@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>{% block title %}Book Marketplace{% endblock %}</title>
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-gray-50 text-gray-800">
-    <nav class="bg-white shadow p-4">
+    <nav class="bg-white shadow p-4 sticky top-0 z-50">
         <div class="container mx-auto flex flex-wrap justify-between items-center">
             <h1 class="text-xl font-bold"><a href="/" class="flex items-center">📚 BookSwap</a></h1>
             <div class="flex items-center space-x-4">
@@ -18,7 +19,6 @@
                         <a class="text-blue-600" href="{% url 'my_books' %}">📖 My Listings</a>
                         <a class="text-green-600" href="{% url 'add_book' %}">➕ Add Book</a>
                         <a href="{% url 'seller_orders' %}" class="text-purple-600 hover:text-purple-800">📬 Seller Requests</a>
-                        <a href="{% url 'about' %}" class="text-gray-700 hover:text-blue-600">👤 About</a>
                         <form method="post" action="/accounts/logout/" class="inline">
                             {% csrf_token %}
                             <button type="submit" class="text-red-600 hover:underline">🚪 Logout</button>
@@ -34,5 +34,11 @@
     <div class="container mx-auto p-4">
         {% block content %}{% endblock %}
     </div>
+
+    <footer class="bg-white shadow p-4 mt-8 sticky bottom-0 z-50">
+        <div class="container mx-auto text-center">
+            <a href="{% url 'about' %}" class="text-gray-700 hover:text-blue-600">👤 About</a>
+        </div>
+    </footer>
 </body>
 </html>

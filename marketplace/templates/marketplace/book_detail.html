@@ -1,26 +1,25 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div class="container mt-4">
-    <div class="row">
-        <div class="col-md-6">
+<div class="container mx-auto px-4 py-8 max-w-6xl bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+    <div class="flex flex-col md:flex-row gap-6 md:gap-8">
+        <div class="w-full md:w-1/2 mb-6 md:mb-0">
             {% if book.image %}
-            <img src="{{ book.image.url }}" class="img-fluid rounded" alt="{{ book.title }}">
+            <img src="{{ book.image.url }}" class="w-full h-auto rounded-lg shadow-md border-4 border-white dark:border-gray-700 hover:scale-105 transition-transform duration-300" alt="{{ book.title }}">
             {% endif %}
         </div>
-        <div class="col-md-6">
-            <h2>{{ book.title }}</h2>
-            <p class="text-muted">By {{ book.author }}</p>
-            <p class="lead">₹{{ book.price }}</p>
-            <p><strong>Condition:</strong> {{ book.get_condition_display }}</p>
-            <p>{{ book.description }}</p>
+        <div class="w-full md:w-1/2">
+            <h1 class="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2 text-center md:text-left">{{ book.title }}</h1>
+            <p class="text-lg text-gray-700 dark:text-gray-300 mb-4 text-center md:text-left">By {{ book.author }}</p>
+            <p class="text-2xl font-bold text-green-700 dark:text-green-400 mb-4 text-center md:text-left">₹{{ book.price }}</p>
+            <p class="mb-4 text-center md:text-left"><span class="font-medium text-gray-800 dark:text-gray-200">Condition:</span> <span class="text-blue-700 dark:text-blue-400">{{ book.get_condition_display }}</span></p>
+            <p class="text-gray-800 dark:text-gray-200 mb-6 bg-gray-50 dark:bg-gray-700 p-4 rounded text-center md:text-left">{{ book.description }}</p>
             
             {% if user.is_authenticated and user != book.seller %}
-                <form method="POST" action="{% url 'request_to_buy' book.id %}">
+                <form method="POST" action="{% url 'request_to_buy' book.id %}" class="mt-6">
                     {% csrf_token %}
-                    <div class="form-group mb-3">
-                        <label for="delivery_type">Choose Delivery Method:</label>
-                        <select name="delivery_type" id="delivery_type" class="form-control" required>
+                    <div class="mb-4">
+                        <select name="delivery_type" id="delivery_type" class="w-full px-4 py-3 text-base border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white" required>
                             <option value="">Select a delivery method</option>
                             <option value="pickup">Meet at campus (Free)</option>
                             <option value="volunteer">Free Volunteer Delivery</option>
@@ -28,7 +27,9 @@
                             <option value="courier">Courier (₹60)</option>
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Request to Buy</button>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-6 rounded-lg transition duration-200 active:scale-95 transform focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                        Request to Buy
+                    </button>
                 </form>
             {% endif %}
         </div>
